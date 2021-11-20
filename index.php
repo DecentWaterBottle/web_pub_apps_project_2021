@@ -1,18 +1,32 @@
 <html>
     <head>
         <script>
-            function getUsers() {
-                var xmlReq = new XMLHttpRequest();
-                xmlReq.open("GET");
-
-                xmlReq.onreadystatechange = function() {
-                    if (xmlReq.readyState == 4 && xmlReq.status == 200){
-                        document.getElementById("userTxt").innerHTML = xmlReq.responseText;
-                    }
-                };
-                
-                xmlReq.send();
+            window.onload = init;
+            function init () {
+                document.getElementById("submit_message").onclick = sendMessage;
             }
+            function sendMessage() {
+                var id = document.querySelector( 'input[name="user"]:checked').value;      
+                var text = document.getElementById('message').value;
+                console.log(text);
+                var url = "add_message_to_db.php";
+                var xmlReq = new XMLHttpRequest();
+                xmlReq.open ("POST", url);
+                xmlReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+                
+                xmlReq.onreadystatechange = function ()
+                {
+                    if (xmlReq.readyState == 4 && xmlReq.status == 200)
+                    {
+                        console.log(xmlReq.responseText);
+                        document.getElementById("posts").innerHTML = xmlReq.responseText; 
+                    } 		
+                };
+            var data = `id=${id}&text=${text}`;
+            xmlReq.send(data);
+            }
+
+
         </script>
     </head>
     <body>
@@ -21,29 +35,21 @@
 
         <h1>Blog</h1>
         <p>Names: </p>
-            <form method="post">
-                <?php 
-                    $db = mysqli_connect("localhost", "root", "", "assign_1");
-                    $charset = mysqli_set_charset ($db, 'utf8');
-                    $query_result = mysqli_query($db, "SELECT * FROM user_posts;");
-                    if (mysqli_num_rows($query_result) == 0) {
-                        echo "No Results\n";
-                    }
-                    else {
-                        echo "Results Found\n";
-                    }
-                    while ($row = mysqli_fetch_array($query_result))
-                    {
-                        echo "<p>{$row['text']}\n</p>";
-                    }
-
-                ?>
-            <input type="radio" name="user" value="bob" checked>First
-            <br> 
-            <input type="radio" name="user" value="alex">Second
+        <?php 
+            $db = mysqli_connect("localhost", "root", "", "assign_1");
+            $result = mysqli_query ($db, "SELECT * FROM users;");
+            while ($row = mysqli_fetch_array ($result))
+            {
+                echo '<input type="radio" name="user" value='.$row["user_id"].'> '.$row["name"];
+                echo "<br>";
+            }
+        ?>
             </br>
-            <textarea name = "message"></textarea>
-            <input type="submit" value="Submit" name="submit_post">
-        </form >
+            <textarea name = "message" id="message"></textarea>
+            <button value="Submit" name="submit_post" id="submit_message">Submit</button>
+
+        <div id="posts"></div>
+
+
     </body>
 </html>

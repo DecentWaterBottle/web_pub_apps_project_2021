@@ -8,7 +8,7 @@
 <p>Name:  <br> <input type = "text" name = "name" required>
 
 <p>Image: <br>
-<!-- <p><textarea name = "image" required></textarea> -->
+<!-- PRINTING IMAGES -->
 <?php 
     $directory = "images";
     if(is_dir($directory)){
@@ -28,7 +28,7 @@
 ?>
 <p><input type = "submit" name="submit"></p>
 </form>
-<p><a href="index.html">Homepage</a></p>
+<p><a href="index.php">Homepage</a></p>
 
 <?php
 
@@ -50,13 +50,6 @@
 </body>
 
 <script>
-
-	// function sendData() {
-	// 	var data = new FormData(document.getElementById("submit_user_form"));
-	// 	var xmlReq = new XMLHttpRequest();
-	// 	xmlReq.open("POST", "add_user.php");
-	// 	xmlReq.send(data);
-	// }
 </script>
 
 </html>
